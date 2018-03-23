@@ -1,8 +1,11 @@
 const express = require('express');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20');
+
 const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.get('/',(req,res) => {
-  return res.send("Hello,word");
-});
+passport.use(new GoogleStrategy())
 
-app.listen(3000,() => console.log('Example app listening on port 3000!'))
+
+app.listen(PORT,() => console.log('Example app listening on port 3000!'))
