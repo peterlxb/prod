@@ -1,5 +1,6 @@
 const passport = require('passport');
-const GithubStrategy = require('passport-github').Strategy;
+//const GithubStrategy = require('passport-github').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const mongoose = require('mongoose');
 const keys = require('../config/keys.js');
 
@@ -16,26 +17,27 @@ passport.deserializeUser(function (id, done) {
 });
 
 passport.use(
-    new GithubStrategy({
-        clientID: keys.githubClientID,
-        clientSecret: keys.githubSecret,
-        callbackURL: "http://127.0.0.1:5000/auth/github/callback"
-    }, async (accessToken, refreshToken, profile, done) => {
-        console.log(accessToken);
-        console.log(profile);
+    new GoogleStrategy({
+        clientID: keys.googleClientID,
+        clientSecret: keys.googleClientSecret,
+        callbackURL: "/auth/google/callback",
+        proxy:true
+    }, (accessToken, refreshToken, profile, done) => {
+        console.log("accessToken: ",accessToken);
+        console.log("profile: ",profile);
 
-        const existingUser = await User.findOne({githubId: profile.id});
-
-        if(existingUser){
-
-          return done(null,existingUser);
-
-        }
-
-        const user = await new User({ githubId: profile.id }).save();
-        done(null,user);
+        User.findOne({googleId: profile.id}).then(existingUser => {
+          if (existingUser) {
+            //
+            done(null, existingUser);
+          } else {
+            //
+             new User({ googleId: profile.id })
+              .save()
+              .then(user => done(null,user));
+          }
+        });
 
         }
       )
-
   );
