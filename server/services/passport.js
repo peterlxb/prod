@@ -25,7 +25,7 @@ passport.use(
         proxy:true
     }, (accessToken, refreshToken, profile, done) => {
         console.log("accessToken: ",accessToken);
-        console.log("profile: ",profile);
+        console.log("profile: ",profile.id);
 
         User.findOne({githubId: profile.id}).then(existingUser => {
           if (existingUser) {

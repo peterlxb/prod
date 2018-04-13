@@ -1,5 +1,5 @@
 import React,{ Component } from 'react';
-import {BrowserRouter ,Route} from 'react-router-dom';
+import {Switch ,withRouter,Redirect,Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import * as actions from '../actions';
@@ -13,19 +13,27 @@ class App extends Component {
     this.props.fetchUser();
   }
 
+
+
   render(){
+
+    let routes = (
+        <Switch>
+          <Route path="/surveys" component={Surveys} />
+          <Route path="/" exact component={Landing} />
+          <Redirect to="/" />
+        </Switch>
+    );
+
     return (
       <div className="container">
-        <BrowserRouter>
-          <div>
-            <Header />
-            <Route path="/" exact component={Landing} />
-            <Route path="/surveys" exact component={Surveys} />
-          </div>
-        </BrowserRouter>
+        <div>
+          <Header />
+          {routes}
+        </div>
       </div>
     )
   }
 }
 
-export default connect(null,actions)(App);
+export default withRouter(connect(null,actions)(App));

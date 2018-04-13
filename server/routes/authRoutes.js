@@ -4,11 +4,12 @@ const keys = require('../config/keys');
 module.exports = (app) => {
     app.get('/auth/github',
         passport.authenticate('github', { scope: ['profile', 'email'] }),
+
     );
 
     app.get('/auth/github/callback',
         passport.authenticate('github'),
-        (req,res) => {
+        function (req, res) {
           res.redirect('/surveys');
         }
       );
